@@ -1,6 +1,6 @@
 # Docker Media Stack
 
-A docker-compose setup to easily install everything that's required to start downloading your favourite series and movies.
+A docker-compose setup to easily install everything that's required to start downloading your favourite tv and movies.
 
 ## Components
 Program | Project | Local URL
@@ -41,7 +41,7 @@ Given each service in running inside a container, the paths are relative to the 
 - Initial setup: Browse to `http://localhost:32400/web`
 - Subsequent use: Plex will be acccessible from `https://app.plex.tv/desktop`
 - Movies: `/media/movies`
-- TV Shows: `/media/series`
+- TV Shows: `/media/tv`
 
 ---
 ## Troubleshooting
