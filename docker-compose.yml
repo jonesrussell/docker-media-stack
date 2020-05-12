@@ -24,13 +24,25 @@ services:
     env_file: ./.env
     restart: unless-stopped
 
-  deluge:
-    image: linuxserver/deluge:latest
-    container_name: deluge
-    network_mode: host
+  transmission:
+    image: linuxserver/transmission
+    container_name: transmission
+    # network_mode: host # deluge had this
+    environment:
+      - PUID=1000
+      - PGID=1000
+      - TZ=America/Toronto
+        # - TRANSMISSION_WEB_HOME=/combustion-release/ #optional
+      - "USER=${USERNAME}"
+      - "PASS=${PASSWORD}"
     volumes:
-      - "${CONFIG_DIR:?}/deluge:/config"
+      - "${CONFIG_DIR:?}/transmission:/config"
       - "${DOWNLOAD_DIR:?}:/downloads"
+        # - path to watch folder:/watch
+    ports:
+      - 9091:9091
+      - 51413:51413
+      - 51413:51413/udp
     env_file: ./.env
     restart: unless-stopped
 
@@ -73,7 +85,7 @@ services:
     container_name: watchtower_media-stack
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock
-    command: sonarr radarr deluge jackett plex tautulli bazarr watchtower_media-stack -s "0 0 3 ? * *" --cleanup
+    command: sonarr radarr transmission jackett plex tautulli bazarr watchtower_media-stack -s "0 0 3 ? * *" --cleanup
     env_file: ./.env
     restart: unless-stopped
 
