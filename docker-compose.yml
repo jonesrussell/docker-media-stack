@@ -1,5 +1,7 @@
 version: "3"
+
 services:
+
   sonarr:
     image: linuxserver/sonarr:latest
     container_name: sonarr
@@ -25,7 +27,7 @@ services:
     restart: unless-stopped
 
   transmission:
-    image: linuxserver/transmission
+    image: linuxserver/transmission:latest
     container_name: transmission
     # network_mode: host # deluge had this
     environment:
@@ -85,7 +87,7 @@ services:
     container_name: watchtower_media-stack
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock
-    command: sonarr radarr transmission jackett plex tautulli bazarr watchtower_media-stack -s "0 0 3 ? * *" --cleanup
+    command: sonarr radarr transmission jackett plex tautulli bazarr ombi watchtower_media-stack -s "0 0 3 ? * *" --cleanup
     env_file: ./.env
     restart: unless-stopped
 
@@ -105,3 +107,19 @@ services:
       - "${BAZARR_PORT}:6767"
     env_file: ./.env
     restart: unless-stopped
+
+  ombi:
+    image: linuxserver/ombi:latest
+    container_name: ombi
+    environment:
+      - PUID=1000
+      - PGID=1000
+      - TZ=America/Toronto
+      - BASE_URL=/ombi #optional
+    volumes:
+      - "${CONFIG_DIR:?}/ombi:/config"
+    ports:
+      - 3579:3579
+    env_file: ./.env
+    restart: unless-stopped
+
