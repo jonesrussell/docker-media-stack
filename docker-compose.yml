@@ -1,5 +1,7 @@
 version: "3"
+
 services:
+
   sonarr:
     image: linuxserver/sonarr:latest
     container_name: sonarr
@@ -68,6 +70,23 @@ services:
     env_file: ./.env
     restart: unless-stopped
 
+  nzbget:
+    image: linuxserver/nzbget
+    container_name: nzbget
+    environment:
+        - PUID=1000
+        - PGID=1000
+        - TZ=America/Toronto
+    volumes:
+      - "${CONFIG_DIR:?}/nzbget:/config"
+      - "${MEDIA_DIR:?}/movies:/movies"
+      - "${MEDIA_DIR:?}/tv:/tv"
+      - "${DOWNLOAD_DIR:?}:/downloads"
+    ports:
+        - 6789:6789
+    env_file: ./.env
+    restart: unless-stopped
+
   watchtower:
     image: v2tec/watchtower:latest
     container_name: watchtower_media-stack
@@ -93,3 +112,4 @@ services:
       - "${BAZARR_PORT}:6767"
     env_file: ./.env
     restart: unless-stopped
+
