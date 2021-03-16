@@ -21,31 +21,8 @@ services:
       - 7878:7878
     volumes:
       - "${CONFIG_DIR:?}/radarr:/config"
-      - "${MEDIA_DIR:?}/movies:/movies"
-      - "${DOWNLOAD_DIR:?}:/downloads"
-    env_file: ./.env
-    restart: unless-stopped
-
-  transmission:
-    image: linuxserver/transmission:latest
-    container_name: transmission
-    # network_mode: host # deluge had this
-    environment:
-      - PUID=1000
-      - PGID=1000
-      - TZ=America/Toronto
-        # - TRANSMISSION_WEB_HOME=/combustion-release/ #optional
-      - "USER=${USERNAME}"
-      - "PASS=${PASSWORD}"
-    volumes:
-      - "${CONFIG_DIR:?}/transmission:/config"
       - "${MOVIES_DIR:?}:/movies"
       - "${DOWNLOAD_DIR:?}:/downloads"
-        # - path to watch folder:/watch
-    ports:
-      - 9091:9091
-      - 51413:51413
-      - 51413:51413/udp
     env_file: ./.env
     restart: unless-stopped
 
