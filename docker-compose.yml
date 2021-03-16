@@ -21,7 +21,6 @@ services:
       - 7878:7878
     volumes:
       - "${CONFIG_DIR:?}/radarr:/config"
-<<<<<<< HEAD
       - "${MEDIA_DIR:?}/movies:/movies"
       - "${DOWNLOAD_DIR:?}:/downloads"
     env_file: ./.env
@@ -40,9 +39,7 @@ services:
       - "PASS=${PASSWORD}"
     volumes:
       - "${CONFIG_DIR:?}/transmission:/config"
-=======
       - "${MOVIES_DIR:?}:/movies"
->>>>>>> rej
       - "${DOWNLOAD_DIR:?}:/downloads"
         # - path to watch folder:/watch
     ports:
