@@ -9,7 +9,7 @@ services:
       - 8989:8989
     volumes:
       - "${CONFIG_DIR:?}/sonarr:/config"
-      - "${MEDIA_DIR:?}/tv:/tv"
+      - "${TV_DIR:?}:/tv"
       - "${DOWNLOAD_DIR:?}:/downloads"
     env_file: ./.env
     restart: unless-stopped
@@ -21,6 +21,7 @@ services:
       - 7878:7878
     volumes:
       - "${CONFIG_DIR:?}/radarr:/config"
+<<<<<<< HEAD
       - "${MEDIA_DIR:?}/movies:/movies"
       - "${DOWNLOAD_DIR:?}:/downloads"
     env_file: ./.env
@@ -39,6 +40,9 @@ services:
       - "PASS=${PASSWORD}"
     volumes:
       - "${CONFIG_DIR:?}/transmission:/config"
+=======
+      - "${MOVIES_DIR:?}:/movies"
+>>>>>>> rej
       - "${DOWNLOAD_DIR:?}:/downloads"
         # - path to watch folder:/watch
     ports:
@@ -66,7 +70,10 @@ services:
     network_mode: host
     volumes:
       - "${CONFIG_DIR:?}/plex:/config"
-      - "${MEDIA_DIR:?}:/media"
+      - "${TV_DIR:?}:/media/tv"
+      - "${MOVIES_DIR:?}:/media/movies"
+      - "${XXX_DIR:?}:/media/xxx"
+      - "${MUSIC_DIR:?}:/media/music"
       - "${TRANSCODE_DIR:?}:/transcode"
     env_file: ./.env
     restart: unless-stopped
@@ -82,14 +89,43 @@ services:
     env_file: ./.env
     restart: unless-stopped
 
+  nzbget:
+    image: linuxserver/nzbget
+    container_name: nzbget
+    environment:
+      - PUID=1000
+      - PGID=1000
+      - TZ=America/Toronto
+    volumes:
+      - "${CONFIG_DIR:?}/nzbget:/config"
+      - "${MOVIES_DIR:?}:/movies"
+      - "${TV_DIR:?}:/tv"
+      - "${DOWNLOAD_DIR:?}:/downloads"
+    ports:
+      - 6789:6789
+    env_file: ./.env
+    restart: unless-stopped
+
   watchtower:
     image: v2tec/watchtower:latest
     container_name: watchtower_media-stack
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock
-    command: sonarr radarr transmission jackett plex tautulli bazarr ombi watchtower_media-stack -s "0 0 3 ? * *" --cleanup
+    command: sonarr radarr nzbget jackett plex tautulli bazarr watchtower_media-stack -s "0 0 3 ? * *" --cleanup
     env_file: ./.env
     restart: unless-stopped
+
+    #  lidarr:
+    #    image: ghcr.io/linuxserver/lidarr
+    #    container_name: lidarr
+    #    env_file: ./.env
+    #    volumes:
+    #      - "${CONFIG_DIR:?}/lidarr:/config"
+    #      - "${MUSIC_DIR:?}:/music"
+    #      - "${DOWNLOAD_DIR:?}:/downloads"
+    #    ports:
+    #      - "${LIDARR_PORT}:8686"
+    #    restart: unless-stopped
 
   bazarr:
     image: linuxserver/bazarr:latest
@@ -101,8 +137,8 @@ services:
       - UMASK_SET=002 #optional
     volumes:
       - "${CONFIG_DIR:?}/bazarr:/config"
-      - "${MEDIA_DIR:?}/movies:/movies"
-      - "${MEDIA_DIR:?}/tv:/tv"
+      - "${MOVIES_DIR:?}:/movies"
+      - "${TV_DIR:?}:/tv"
     ports:
       - "${BAZARR_PORT}:6767"
     env_file: ./.env
