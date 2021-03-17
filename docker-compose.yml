@@ -118,18 +118,18 @@ services:
     env_file: ./.env
     restart: unless-stopped
 
-  ombi:
-    image: linuxserver/ombi:latest
-    container_name: ombi
-    environment:
-      - PUID=1000
-      - PGID=1000
-      - TZ=America/Toronto
-      - BASE_URL=/ombi #optional
-    volumes:
-      - "${CONFIG_DIR:?}/ombi:/config"
-    ports:
-      - 3579:3579
-    env_file: ./.env
-    restart: unless-stopped
+    #  ombi:
+    #    image: linuxserver/ombi:latest
+    #    container_name: ombi
+    #    environment:
+    #      - PUID=1000
+    #      - PGID=1000
+    #      - TZ=America/Toronto
+    #      - BASE_URL=/ombi #optional
+    #    volumes:
+    #      - "${CONFIG_DIR:?}/ombi:/config"
+    #    ports:
+    #      - 3579:3579
+    #    env_file: ./.env
+    #    restart: unless-stopped
 
